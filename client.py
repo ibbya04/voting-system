@@ -3,7 +3,7 @@ from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import ec
 
 # Define the base URL of the server
-server_url = "http://localhost:8080"
+server_url = "http://localhost:5000"
 
 # NEW Step 3: Write a function that takes as input a voter ID and loads the voter's private key from a PEM file.
 #   NEW This key is used to sign the vote before submission.
@@ -41,11 +41,11 @@ def check_status():
     try:
         r = requests.get(status_url, timeout=5)
         
-        if r.status_code == 200:
+        if r.json() is True:
             return True
         return False
     except Exception as e:
-        print(f"Error fetching status")
+        print(f"Error fetching status {e}")
 
 # Step 5: Write a function to send a vote
 #   Generate a signature using the signing function in step 4. 
@@ -108,15 +108,18 @@ def get_votes():
         return
 
     results_url = server_url + '/results'
-    response = requests.get(results_url)
+    try:
+        response = requests.get(results_url)
 
-    results = response.json()
-    sorted_results = dict(sorted(results.items(), key=lambda item: item[1], reverse=True))
+        results = response.json()
+        sorted_results = dict(sorted(results.items(), key=lambda item: item[1], reverse=True))
     
-    print("\n---------------------------------------")
-    for candidate in sorted_results:
-        print(f"Candidate: {candidate}, votes received: {sorted_results[candidate]}" )
-    print("---------------------------------------\n")
+        print("\n---------------------------------------")
+        for candidate in sorted_results:
+            print(f"Candidate: {candidate}, votes received: {sorted_results[candidate]}" )
+        print("---------------------------------------\n")
+    except Exception as e:
+        print(f"error fetching vote results {e}")
 
 if __name__ == "__main__":
     '''
