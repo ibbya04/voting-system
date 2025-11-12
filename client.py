@@ -4,13 +4,15 @@ from cryptography.hazmat.primitives.asymmetric import ec
 
 # Define the base URL of the server
 server_url = "http://localhost:5000"
+PUBLIC_KEY_FILE = "public_keys.json"
 
-# NEW Step 3: Write a function that takes as input a voter ID and loads the voter's private key from a PEM file.
-#   NEW This key is used to sign the vote before submission.
-#   NEW The function should return an error if the voter ID is not an eligible voter. 
 def read_private_key(voter_id):
+    """
+    Loads a voter's private key from their PEM file.
+    """
     try:
-        with open(f"private_key_{voter_id}.pem", "rb") as f:
+        filename = f"private_key_{voter_id.split('_')[-1]}.pem"
+        with open(filename, "rb") as f:
             serialized_private = f.read()
 
             # unserialise private key loaded from file
@@ -20,13 +22,17 @@ def read_private_key(voter_id):
             )
         return loaded_private_key
     except (FileNotFoundError) as e:
-        return e
+        print(f"Error: Private key file '{filename}' not found for voter '{voter_id}'.")
+        raise FileNotFoundError
+    except Exception as e:
+        print(f"Error reading private key: {e}")
+        return None
 
-# NEW Step 4: Write a function to sign the vote. 
-#   NEW Your function should take as input a private signing key and a candidate, and should return a signature. 
-#   NEW Convert signature to hex string for transmission
-def sign_vote(private_key, voter_id, chosen_vote):
-    message = f"{voter_id}:{chosen_vote}"
+def sign_vote(private_key, voter_id, candidate):
+    '''
+    Signs the vote message, which is made up of (voter_id:candidate)
+    '''
+    message = f"{voter_id}:{candidate}"
     
     signature = private_key.sign(
         message.encode(),
@@ -34,80 +40,104 @@ def sign_vote(private_key, voter_id, chosen_vote):
     )
     return signature.hex()
 
-# NEW Step 5: Write a function to get the status of the server.
-#   NEW Your function should return the current status, or an error message if the status cannot be retrieved. 
 def check_status():
+    '''
+    Checks if the election is open or closed.
+    '''
     status_url = server_url + '/status'
     try:
         r = requests.get(status_url, timeout=5)
+        r.raise_for_status()
         
         if r.json() is True:
             return True
         return False
     except Exception as e:
         print(f"Error fetching status {e}")
+        return None
 
-# Step 5: Write a function to send a vote
-#   Generate a signature using the signing function in step 4. 
-#   Prepare the headers and JSON payload
-#   Include voter ID, candidate name, and signature in the payload.
-#   Print the payload for testing purposes.
-#   Send a POST request to the /vote endpoint and raise an error if the server responds with a failure code (e.g. 400 or 500)
-#   Print the server's response (should be a confirmation message)
-def send_vote(voter_id, chosen_vote):
+def send_vote(voter_id, candidate):
+    '''
+    Validates, signs, and sends a single vote to the server.
+    '''
 
-    if check_status() is not True:
-        print("Voting is closed!")
+    status = check_status()
+    if status is None:
+        print("Could not determine server status. Exiting.")
+        return
+    if status is not True:
+        print("Voting is currently closed.")
         return
 
-    with open("public_keys.json", "r") as f:
-        data = json.load(f)
+    try:
+        # client side vote validation
+        with open(PUBLIC_KEY_FILE, "r") as f:
+            public_key_db = json.load(f)
 
-        voter_id = int(voter_id)
         candidates = ["Alice", "Bob", "Charlie"]
 
-        # check if candidate name and voter id inputted exist.
-        try:
-            # index json object to find public key for a given voter id
-            serialized_public = data[voter_id][f"public_key_{voter_id}"]
-            if chosen_vote not in candidates:
-                raise KeyError
+        # check if candidate and voter id exists
+        if candidate not in candidates:
+            print(f"Error Candidate: '{candidate}' not in list of candidates.")
+            return
+        if voter_id not in public_key_db:
+            print(f"Error Voter ID: '{voter_id}' not found in public key file.")
+            return
+            
+    except FileNotFoundError:
+        print(f"Error Could not find {PUBLIC_KEY_FILE}.")
+        return
+    except json.JSONDecodeError:
+        print(f"Error Could not parse {PUBLIC_KEY_FILE}.")
+        return
 
-        except IndexError:
-            print(f"\nERROR - voter id: '{voter_id}' not found in public key file")
-            return
-        except KeyError:
-            print(f"\nERROR - Candidate: '{chosen_vote}' not in list of candidates")
-            return
 
     private_key = read_private_key(voter_id)
+    if private_key is None:
+        print("Could not load private key. Exiting.")
+        return
 
-    signature = sign_vote(private_key, voter_id, chosen_vote)
-    print(signature)
+    try:
+        # sign vote with voters private key
+        signature = sign_vote(private_key, voter_id, candidate)
 
-    vote_url = server_url + '/vote'
+        vote_url = server_url + '/vote'
 
-    payload = json.dumps([{"chosen_vote": chosen_vote}, {"voter_id": voter_id}, {"signature": signature}])
+        payload = {
+            "candidate": candidate,
+            "voter_id": voter_id,
+            "signature": signature
+        }
 
-    r = requests.post(vote_url, payload, timeout=5)
+        r = requests.post(vote_url, json=payload, timeout=5)
 
-    if (r.status_code != 200):
-        print(f"\nServer returned error {r.status_code}:")
-        print(r.text.strip() or "No error message provided.")
-    else:
-        print("\nVote sucessfully sent.\nResponse received: " + r.text)
+        if (r.status_code != 200):
+            print(f"\nServer returned error {r.status_code}:")
+            print(r.text.strip() or "No error message provided.")
+        else:
+            print("\nVote sucessfully sent.\nResponse received: " + r.text)
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error sending vote: {e}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
 
 def get_votes():
     '''
-    Step 6: Write a function to fetch current vote results
-    Send a GET request to the /results endpoint
-    Print the vote tally in a readable format
+    Fetch current vote results and prints the vote tally in a readable format
     '''
-    if check_status() is True:
-        print("Voting is still open!")
+
+    status = check_status()
+    if status is None:
+        print("Could not determine server status. Exiting.")
+        return
+    if status is True:
+        print("Voting is still open.")
         return
 
     results_url = server_url + '/results'
+    
+    # print formatted results tally 
     try:
         response = requests.get(results_url)
 

@@ -3,3 +3,4 @@ public_keys.json
 351/
 .DS_Store
 __pycache__/
+test.py

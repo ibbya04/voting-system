@@ -30,31 +30,33 @@ def gen_keypair():
 #   Generate key pairs for each voter and update the public key database
 #   Save the updated public key database to disk
 
-if __name__ == "__main__":
-    print("Registrar Menu")
+def main(num_voters):
     
-    choice = int(input("How many voters would you like to register: "))
-    
+    public_key_db = {}
     filename_pk = "public_keys.json"
 
-    for i in range(choice):
+    for i in range(num_voters):
         public, private = gen_keypair()
 
-        # save public keys to the json file
-        # if file already exists, load current keys + append new keys, then write 
-        if not os.path.exists(filename_pk):
-            with open(filename_pk, "w") as f:
-                json.dump([], f)
+        voter_id = str(i)
 
-        with open(filename_pk, "r") as f:
-            data = json.load(f)
-
-        data.append({f"public_key_{i}": public.decode()})
-
-        with open(filename_pk, "w") as f:
-            json.dump(data, f, indent=4)
+        # save public keys to the public key dictionary object for now
+        public_key_db[f"voter_id_{voter_id}"] = public.decode()
 
         # save private keys to separate files
         filename_sk = f"private_key_{i}.pem"
         with open(filename_sk, "wb") as f:
             f.write(private)
+
+    # write public keys to database file 
+    with open(filename_pk, "w") as f:
+        json.dump(public_key_db, f, indent=4)
+
+    print(f"Successfully registered {num_voters} voters to {filename_pk} and private_key_N.pem")
+
+if __name__ == "__main__":
+    try:
+        num = int(input("How many voters would you like to register: "))
+        main(num)
+    except ValueError:
+        print("Please enter a valid number.")
