@@ -3,7 +3,7 @@ import subprocess
 import time
 import requests
 
-import registrar, client, admin, server
+import registrar, client, admin, server, tallier
 
 SERVER_SCRIPT = "server.py"
 ADMIN_SCRIPT = "admin.py"
@@ -26,9 +26,13 @@ def check_server_running():
 def main():
     try:
         print("Starting Voting System...")
+
+        # starting tallier to gen it public key
+        print("\nGenerating Tallier Keys (RSA)...")
+        tallier.generate_encryption_keys()
         
         # start registrat
-        print("Registrar starting (warning this overwrites any previous key files)")
+        print("\nRegistrar starting (warning this overwrites any previous key files)")
         num_voters = int(input("How many voters would you like to register: "))
         registrar.main(num_voters)
 
@@ -69,8 +73,8 @@ def main():
         subprocess.run(["python", ADMIN_SCRIPT, "close"], check=True)
         print("Election is now closed.\n")
 
-        print("Tallying results...")
-        client.get_votes()
+        print("Tallier decrypting and printing results...")
+        tallier.main_tally()
         print("Tally complete.\n")
         
     except Exception as e:

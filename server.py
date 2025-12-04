@@ -9,23 +9,23 @@ host = "localhost"
 port = 5000
 PUBLIC_KEY_FILE = "public_keys.json"
 
-# Step 3: Define a function to load the public key for a given voter ID from the registrar's database.
-#   This key is used to verify the signature on the submitted vote.
 def load_public_key(voter_id):
+    '''
+    Load voter's public ECDSA signing key
+    '''
     try:
         with open(PUBLIC_KEY_FILE, "r") as f:
             data = json.load(f)
+        
+        if voter_id not in data:
+            raise KeyError(f"Voter ID '{voter_id}' not found in public key file.")
+        
+        # lookup public key from json database for a given voter_id
+        serialized_public = data[voter_id]
 
-            # lookup public key for a given voter id
-            serialized_public = data.get(voter_id)
-            
-            if not serialized_public:
-                print(f"[Server] '{voter_id}' not found in public key file")
-                raise KeyError(f"[Server] '{voter_id}' not found in public key file")
-
-            loaded_public_key = serialization.load_pem_public_key(
-                serialized_public.encode(),
-            )
+        loaded_public_key = serialization.load_pem_public_key(
+            serialized_public.encode(),
+        )
         return loaded_public_key
     except FileNotFoundError:
         raise FileNotFoundError(f"'{PUBLIC_KEY_FILE}' does not exist")
@@ -37,15 +37,16 @@ def load_public_key(voter_id):
 class votingHTTP(BaseHTTPRequestHandler):
     '''
     Custom HTTP request handler class to manage incoming HTTP requests.
+    Only verifies who has voted, not which candidate they voted for
     '''
     # Create a threading lock to protect concurrent access to shared data and a simple shared state container with an initial value of CLOSED.
     lock = threading.Lock()
     status = False
 
-    # dictionary to hold votes
-    votes = {'Alice': 0, 'Bob': 0, 'Charlie': 0}
+    # list of encrypted ballots
+    ballot_box = []
     
-    # list of who has voted in this election
+    # holds who has voted in this election
     voted_list = set()
 
     def log_message(self, format, *args):
@@ -85,7 +86,13 @@ class votingHTTP(BaseHTTPRequestHandler):
         elif self.path == '/close':
             with votingHTTP.lock:
                 votingHTTP.status = False
-            self.respond(200, "[Server] Succesfully closed server for voting")
+                try:
+                    with open("ballots.json", "w") as f:
+                        json.dump(votingHTTP.ballot_box, f, indent=2)
+                        self.respond(200, "[Server] Succesfully saved ballots and closed server for voting")
+                except Exception as e:
+                    print(f"[Server] Error: Could not save ballots to disk: {e}")
+                    self.respond(400, f"[Server] Error: Could not save ballots to disk: {e}")
             return
 
         # voting logic
@@ -95,21 +102,24 @@ class votingHTTP(BaseHTTPRequestHandler):
         
         try: 
             # check status
-            if not votingHTTP.status:
-                raise Exception("[Server] Voting is currently closed")
+            with votingHTTP.lock:
+                if not votingHTTP.status:
+                    raise Exception("[Server] Voting is currently closed")
 
-            content_length = int(self.headers.get("Content-Length"))
+            # parse incoming json payload
+            content_length = int(self.headers.get("Content-Length", 0))
             # read that many bytes from the body of the request
             body = self.rfile.read(content_length)
 
-            input = json.loads(body)
+            data = json.loads(body)
 
-            try:
-                candidate = input["candidate"]
-                voter_id = input["voter_id"]
-                signature_hex = input["signature"]
-            except KeyError as e:
-                raise KeyError(f"[Server] HTTP request body conatains incorreclty formatted data: {e}")
+            # extract from dictionary
+            voter_id = data.get("voter_id")
+            encrypted_ballot = data.get("encrypted_ballot")
+            signature_hex = data.get("signature_hex")
+            
+            if not all([voter_id, encrypted_ballot, signature_hex]):
+                raise KeyError("[Server] Missing required fields: voter_id, encrypted_ballot, or signature_hex.")
 
             # Check if voter has already voted
             with votingHTTP.lock:
@@ -117,13 +127,15 @@ class votingHTTP(BaseHTTPRequestHandler):
                     raise Exception(f"[Server] '{voter_id}' has already cast a ballot.")
 
             public_key = load_public_key(voter_id)
-    
+
+            ballot_to_encode = json.dumps(encrypted_ballot, sort_keys=True)
+
+
             # verify ECDSA signature received
             try:
-                message = f"{voter_id}:{candidate}"
                 public_key.verify(
                     bytes.fromhex(signature_hex),   # convert hex string to bytes
-                    message.encode(),              # convert string to bytes
+                    ballot_to_encode.encode(),              # convert string to bytes
                     ec.ECDSA(hashes.SHA256())
                 )
             except InvalidSignature:
@@ -135,15 +147,13 @@ class votingHTTP(BaseHTTPRequestHandler):
 
             # record vote
             with votingHTTP.lock:
-                if candidate in votingHTTP.votes:
-                    votingHTTP.votes[candidate] += 1
-                    votingHTTP.voted_list.add(voter_id)
-                    print(f"[Server] {voter_id} has successfully voted for {candidate}")
-                    self.respond(200, "[Server] Vote successfully recorded\n")
-                else:
-                    raise IndexError(f"[Server] No candidate with name {candidate}, please choose from Alice, Bob or Charlie")
+                votingHTTP.ballot_box.append(encrypted_ballot)
+                votingHTTP.voted_list.add(voter_id)
             
-        except (json.JSONDecodeError, KeyError, TypeError, IndexError, Exception) as e:
+            print(f"[Server] Successfully received and encrypted ballot for {voter_id}")
+            self.respond(200, "[Server] Vote successfully recorded\n")
+            
+        except Exception as e:
             error_msg = f"[Server] Error processing request: {type(e).__name__} - {e}"
             print(f"{error_msg}\nSending error to client")
             self.respond(400, error_msg)
@@ -154,12 +164,8 @@ class votingHTTP(BaseHTTPRequestHandler):
         '''
         if self.path == '/results':
             # only show results if election is closed
-            if votingHTTP.status == True:
-                error_msg = f"[Server] Error voting is still open, cannot view results"
-                self.respond(403, error_msg)
-                return()
-
-            self.respond(200, votingHTTP.votes)
+            with votingHTTP.lock:
+                self.respond(200, votingHTTP.ballot_box)
 
         elif self.path == '/status':
             # return current election status
