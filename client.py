@@ -2,6 +2,7 @@ import requests, json, os
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import ec, padding, rsa
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+from schnorr import schnorr_sign, signature_to_hex
 
 
 # Define the base URL of the server
@@ -131,17 +132,15 @@ def send_vote(voter_id, candidate):
 
     try:
         # sign ballot with voters private key
-        signature = private_key.sign(
-            ballot_to_sign_str.encode('utf-8'),
-            ec.ECDSA(hashes.SHA256())
-        )
+        signature = schnorr_sign(private_key, ballot_to_sign_str)
+        signature_hex = signature_to_hex(signature)
 
         vote_url = server_url + '/vote'
 
         payload = {
             "voter_id": voter_id,
             "encrypted_ballot": encrypted_ballot,
-            "signature_hex": signature.hex()
+            "signature_hex": signature_hex
         }
 
         r = requests.post(vote_url, json=payload, timeout=5)

@@ -3,7 +3,7 @@ import subprocess
 import time
 import requests
 
-import registrar, client, admin, server, tallier
+import registrar, client, tallier
 
 SERVER_SCRIPT = "server.py"
 ADMIN_SCRIPT = "admin.py"
@@ -36,9 +36,9 @@ def main():
         num_voters = int(input("How many voters would you like to register: "))
         registrar.main(num_voters)
 
-        # run the server as a non-blocking background process
+        # run the server as a background process
         print(f"\nStarting Voting server ({SERVER_SCRIPT}) ")
-        server_process = subprocess.Popen(["python", SERVER_SCRIPT])
+        server_process = subprocess.Popen(["python3", SERVER_SCRIPT])
 
         # Check if server is running 
         if not check_server_running():
@@ -46,7 +46,7 @@ def main():
         print("Server started successfully.")
         
         print("\nOpening election ")
-        subprocess.run(["python", ADMIN_SCRIPT, "open"], check=True)
+        subprocess.run(["python3", ADMIN_SCRIPT, "open"], check=True)
         print("Election is now open.\n")
 
         # 5. Simulate Votes
@@ -70,7 +70,7 @@ def main():
 
         # close election
         print("Closing election")
-        subprocess.run(["python", ADMIN_SCRIPT, "close"], check=True)
+        subprocess.run(["python3", ADMIN_SCRIPT, "close"], check=True)
         print("Election is now closed.\n")
 
         print("Tallier decrypting and printing results...")

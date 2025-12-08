@@ -4,6 +4,7 @@ from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.exceptions import InvalidSignature
 import threading
+from schnorr import schnorr_verify, signature_from_hex
 
 host = "localhost"
 port = 5000
@@ -133,11 +134,8 @@ class votingHTTP(BaseHTTPRequestHandler):
 
             # verify ECDSA signature received
             try:
-                public_key.verify(
-                    bytes.fromhex(signature_hex),   # convert hex string to bytes
-                    ballot_to_encode.encode(),              # convert string to bytes
-                    ec.ECDSA(hashes.SHA256())
-                )
+                signature = signature_from_hex(signature_hex)
+                schnorr_verify(public_key, ballot_to_encode, signature)
             except InvalidSignature:
                 # catch the failed signatureverification
                 raise Exception(f"[Server] InvalidSignature: Signature verification failed for voter '{voter_id}'.")
