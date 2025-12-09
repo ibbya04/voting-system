@@ -1,5 +1,7 @@
 # Step 1: Import modules for command-line arguments, JSON handling and HTTP requests.
-import json, requests, sys
+import json, requests, sys, time
+from cryptography.hazmat.primitives import serialization
+from schnorr import schnorr_sign, signature_to_hex
 
 # Define the server base URL that the script will contact. 
 server_url = "http://localhost:5000"
@@ -14,10 +16,23 @@ def do_post_server(path):
     In the event of a HTTP Error, attempt to parse and print the JSON error body; otherwise display the HTTP code
     In the event of other exceptions, your function should print a failure message.
     '''
+
     specific_url = server_url + path
-    data = json.dumps([])
+
     try:
-        r = requests.post(specific_url, data, timeout=5)
+        with open("admin_private.pem", "rb") as f:
+            admin_private_key = serialization.load_pem_private_key(f.read(), password=b'admin_password')
+
+        timestamp = str(int(time.time()))
+        message = f"{path}:{timestamp}"
+        signature = schnorr_sign(admin_private_key, message)
+        
+        payload = {
+            "timestamp": timestamp,
+            "signature_hex": signature_to_hex(signature)
+        }
+
+        r = requests.post(specific_url, json=payload, timeout=5)
 
         if (r.status_code != 200):
             print(f"\nError {r.status_code}: {r.text}")

@@ -1,5 +1,5 @@
 # Step 1: Import helper functions and functions from cryptography.io for cryptographic operations. 
-from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import ec
 import json, os
 
@@ -24,13 +24,33 @@ def gen_keypair():
 
     return serialized_public, serialized_private
 
-# Step 3: Define a function main that prompts the user for number of voters and generates key pairs for each.        
-#   Ask the user how many voters to register    
-#   Load existing public key database if it exists, or start a new one
-#   Generate key pairs for each voter and update the public key database
-#   Save the updated public key database to disk
+print("\nRegistrar starting (warning this overwrites any previous key files)")
+
+def gen_admin_keys():
+    private_key = ec.generate_private_key(ec.SECP384R1())
+    
+    # save private key for admin
+    with open("admin_private.pem", "wb") as f:
+        f.write(private_key.private_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PrivateFormat.PKCS8,
+            encryption_algorithm=serialization.BestAvailableEncryption(b'admin_password')
+        ))
+    
+    # save public key
+    with open("admin_public.pem", "wb") as f:
+        f.write(private_key.public_key().public_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PublicFormat.SubjectPublicKeyInfo
+        ))
 
 def main(num_voters):
+    '''
+    Ask the user how many voters to register    
+    Load existing public key database if it exists, or start a new one
+    Generate key pairs for each voter and update the public key database
+    Save the updated public key database to disk
+    '''
     
     public_key_db = {}
     filename_pk = "public_keys.json"
@@ -52,7 +72,10 @@ def main(num_voters):
     with open(filename_pk, "w") as f:
         json.dump(public_key_db, f, indent=4)
 
-    print(f"Successfully registered {num_voters} voters to {filename_pk} and private_key_N.pem")
+    print(f"[Registrar] Successfully registered {num_voters} voters to {filename_pk} and private_key_N.pem")
+
+    gen_admin_keys()
+    print("[Registrar] Successfully gernerated key pair for Admin")
 
 if __name__ == "__main__":
     try:

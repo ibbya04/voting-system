@@ -1,5 +1,6 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import json
+import time
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.exceptions import InvalidSignature
@@ -34,6 +35,43 @@ def load_public_key(voter_id):
         raise ValueError(f"Invalid JSON in '{PUBLIC_KEY_FILE}': {e}")
     except Exception as e:
         raise RuntimeError(f"Error loading public key for voter {voter_id}: {e}")
+    
+def verify_admin_signature(self, path):
+        '''
+        Verifies that a request to the /open or /close endpoint is correctly signed by the admin
+        '''
+
+        try:
+            with open("admin_public.pem", "rb") as f:
+                admin_public_key = serialization.load_pem_public_key(f.read())
+
+                content_length = int(self.headers.get("Content-Length", 0))
+                body = self.rfile.read(content_length)
+                data = json.loads(body)
+
+                timestamp = data.get("timestamp")
+                signature_hex = data.get("signature_hex")
+                
+                if not timestamp or not signature_hex:
+                    return False, "Missing timestamp or signature"
+                
+                # Check timestamp if within 60 seconds to prevent replay attacks
+                if abs(int(time.time()) - int(timestamp)) > 60:
+                    return False, "Request expired"
+                
+                # Verify admin signature
+                message = f"{self.path}:{timestamp}"
+                signature = signature_from_hex(signature_hex)
+                
+                if schnorr_verify(admin_public_key, message, signature):
+                    return True, "Admin signature successfully verified"
+                else:
+                    return False, "Invalid admin signature"
+
+        except FileNotFoundError:
+            return False, "Admin public key not found"
+        except Exception as e:
+            return False, str(e)
 
 class votingHTTP(BaseHTTPRequestHandler):
     '''
@@ -74,27 +112,36 @@ class votingHTTP(BaseHTTPRequestHandler):
         '''
         Handles POST requests for /open /close, and /vote
         '''
-        if self.path == '/open':
-            with votingHTTP.lock:
-                votingHTTP.status = True
-                
-                # reset voted list and votes for a new election
-                votingHTTP.votes = {'Alice': 0, 'Bob': 0, 'Charlie': 0}
-                votingHTTP.voted_list = set()
-            self.respond(200, "[Server] Succesfully opened server for voting and reset vote counts")
-            return
+        if self.path in ['/open', '/close']:
+            is_valid, error = verify_admin_signature(self, self.path)
         
-        elif self.path == '/close':
-            with votingHTTP.lock:
-                votingHTTP.status = False
-                try:
-                    with open("ballots.json", "w") as f:
-                        json.dump(votingHTTP.ballot_box, f, indent=2)
-                        self.respond(200, "[Server] Succesfully saved ballots and closed server for voting")
-                except Exception as e:
-                    print(f"[Server] Error: Could not save ballots to disk: {e}")
-                    self.respond(400, f"[Server] Error: Could not save ballots to disk: {e}")
-            return
+            if not is_valid:
+                self.respond(401, f"[Server] Unauthorized: {error}")
+                return
+            
+            # handle opening the election
+            if self.path == '/open':
+                with votingHTTP.lock:
+                    votingHTTP.status = True
+                    
+                    # reset voted list and votes for a new election
+                    votingHTTP.votes = {'Alice': 0, 'Bob': 0, 'Charlie': 0}
+                    votingHTTP.voted_list = set()
+                self.respond(200, "[Server] Succesfully opened server for voting and reset vote counts")
+                return
+            
+            # handle closing the election
+            elif self.path == '/close':
+                with votingHTTP.lock:
+                    votingHTTP.status = False
+                    try:
+                        with open("ballots.json", "w") as f:
+                            json.dump(votingHTTP.ballot_box, f, indent=2)
+                            self.respond(200, "[Server] Succesfully saved ballots and closed server for voting")
+                    except Exception as e:
+                        print(f"[Server] Error: Could not save ballots to disk: {e}")
+                        self.respond(400, f"[Server] Error: Could not save ballots to disk: {e}")
+                return
 
         # voting logic
         elif self.path != '/vote':

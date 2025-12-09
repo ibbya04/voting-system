@@ -33,7 +33,8 @@ def main():
         
         # start registrat
         print("\nRegistrar starting (warning this overwrites any previous key files)")
-        num_voters = int(input("How many voters would you like to register: "))
+        print("Registrar registering 3 voters")
+        num_voters = 3
         registrar.main(num_voters)
 
         # run the server as a background process
