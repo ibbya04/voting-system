@@ -8,3 +8,5 @@ Secure Voting System Architecture.docx
 tallier_private.pem
 tallier_public.pem
 ballots.json
+shamir_params.json
+trustee_*.share
