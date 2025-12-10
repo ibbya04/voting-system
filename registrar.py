@@ -24,8 +24,6 @@ def gen_keypair():
 
     return serialized_public, serialized_private
 
-print("\nRegistrar starting (warning this overwrites any previous key files)")
-
 def gen_admin_keys():
     private_key = ec.generate_private_key(ec.SECP384R1())
     

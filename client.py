@@ -199,7 +199,7 @@ if __name__ == "__main__":
             candidate = input("Enter the candidate's name (Alice, Bob, or Charlie): ")
             send_vote(voter_id, candidate)
         # elif choice == '2':
-            get_votes()
+            # get_votes()
         elif choice == '3':
             print("\nExiting.")
             break

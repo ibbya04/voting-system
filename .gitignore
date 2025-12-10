@@ -10,3 +10,4 @@ admin_*.pem
 ballots.json
 shamir_params.json
 trustee_*.share
+voting_server.log
