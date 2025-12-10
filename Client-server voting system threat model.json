@@ -20,16 +20,16 @@
           {
             "position": {
               "x": 840,
-              "y": 180
+              "y": 180.00000000000028
             },
             "size": {
-              "width": 250,
-              "height": 190
+              "width": 400,
+              "height": 220
             },
             "visible": true,
             "shape": "trust-boundary-box",
-            "id": "04efb1f0-0e94-41df-a0b7-1015b89764fb",
             "zIndex": -1,
+            "id": "04efb1f0-0e94-41df-a0b7-1015b89764fb",
             "data": {
               "type": "tm.BoundaryBox",
               "name": "Trust Boundary",
@@ -40,8 +40,8 @@
           },
           {
             "position": {
-              "x": 460,
-              "y": 230
+              "x": 385,
+              "y": 265
             },
             "size": {
               "width": 90,
@@ -160,8 +160,8 @@
           },
           {
             "position": {
-              "x": 868,
-              "y": 230
+              "x": 888,
+              "y": 245.00000000000028
             },
             "size": {
               "width": 90,
@@ -280,8 +280,8 @@
           },
           {
             "position": {
-              "x": 50,
-              "y": 280
+              "x": -27.5,
+              "y": 295
             },
             "size": {
               "width": 112.5,
@@ -415,7 +415,7 @@
             "connector": "smooth",
             "data": {
               "type": "tm.Flow",
-              "name": "User submits vote ballot",
+              "name": "11. Voter chooses candidate",
               "description": "",
               "outOfScope": false,
               "isTrustBoundary": false,
@@ -428,7 +428,7 @@
               "threats": []
             },
             "labels": [
-              "User submits vote ballot"
+              "11. Voter chooses candidate"
             ],
             "id": "b6b7b9b2-a86b-40bd-8446-523c4c71d8c7",
             "source": {
@@ -466,7 +466,7 @@
             "connector": "smooth",
             "data": {
               "type": "tm.Flow",
-              "name": "Query status",
+              "name": "12. Client sends encrypted and\nsigned ballot in a POST request to '/vote'",
               "description": "",
               "outOfScope": false,
               "isTrustBoundary": false,
@@ -479,58 +479,7 @@
               "threats": []
             },
             "labels": [
-              "Query status"
-            ],
-            "id": "749ff349-27db-44db-97b8-009347ed0191",
-            "source": {
-              "cell": "24a1ba15-9bc9-40c2-88f7-144c39f06fa4",
-              "port": "27caf2aa-851e-4716-bd2a-bed772bad98a"
-            },
-            "target": {
-              "cell": "13a79296-d2a2-4804-bd06-dec8e9b8731b",
-              "port": "37b96c52-6441-4f1a-acfb-0b9f2b4f2d27"
-            },
-            "vertices": [
-              {
-                "x": 160,
-                "y": 390
-              }
-            ]
-          },
-          {
-            "shape": "flow",
-            "attrs": {
-              "line": {
-                "stroke": "#333333",
-                "targetMarker": {
-                  "name": "block"
-                },
-                "sourceMarker": {
-                  "name": ""
-                },
-                "strokeDasharray": null
-              }
-            },
-            "width": 200,
-            "height": 100,
-            "zIndex": 10,
-            "connector": "smooth",
-            "data": {
-              "type": "tm.Flow",
-              "name": "Client signs ballot using \nECDSA and sends to web server",
-              "description": "",
-              "outOfScope": false,
-              "isTrustBoundary": false,
-              "reasonOutOfScope": "",
-              "hasOpenThreats": false,
-              "isBidirectional": false,
-              "isEncrypted": false,
-              "isPublicNetwork": false,
-              "protocol": "",
-              "threats": []
-            },
-            "labels": [
-              "Client signs ballot using \nECDSA and sends to web server"
+              "12. Client sends encrypted and\nsigned ballot in a POST request to '/vote'"
             ],
             "id": "3bc3a5e6-37fe-4067-a38c-2f05dab36bd3",
             "source": {
@@ -543,8 +492,8 @@
             },
             "vertices": [
               {
-                "x": 690,
-                "y": 300
+                "x": 650,
+                "y": 340
               }
             ]
           },
@@ -568,7 +517,7 @@
             "connector": "smooth",
             "data": {
               "type": "tm.Flow",
-              "name": "Server validates ballot received\n and verifies ECDSA signature",
+              "name": "13. Server validates ballot\nreceived and verifies Schnorr \nsignature",
               "description": "",
               "outOfScope": false,
               "isTrustBoundary": false,
@@ -581,7 +530,7 @@
               "threats": []
             },
             "labels": [
-              "Server validates ballot received\n and verifies ECDSA signature"
+              "13. Server validates ballot\nreceived and verifies Schnorr \nsignature"
             ],
             "id": "6584729a-e94a-4663-9e14-f5cbaf348ee7",
             "source": {
@@ -594,12 +543,12 @@
             },
             "vertices": [
               {
-                "x": 1060,
-                "y": 240
+                "x": 1110,
+                "y": 210
               },
               {
-                "x": 1060,
-                "y": 330
+                "x": 1110,
+                "y": 350
               }
             ]
           },
@@ -623,7 +572,7 @@
             "connector": "smooth",
             "data": {
               "type": "tm.Flow",
-              "name": "Send POST to /open or /close",
+              "name": "9./16. Derives Schnorr signature and sends\na POST to '/open' or '/close'",
               "description": "",
               "outOfScope": false,
               "isTrustBoundary": false,
@@ -636,7 +585,7 @@
               "threats": []
             },
             "labels": [
-              "Send POST to /open or /close"
+              "9./16. Derives Schnorr signature and sends\na POST to '/open' or '/close'"
             ],
             "id": "29e25700-b011-4448-a7cc-657e389750a4",
             "source": {
@@ -649,59 +598,8 @@
             },
             "vertices": [
               {
-                "x": 820,
-                "y": 450
-              }
-            ]
-          },
-          {
-            "shape": "flow",
-            "attrs": {
-              "line": {
-                "stroke": "#333333",
-                "targetMarker": {
-                  "name": "block"
-                },
-                "sourceMarker": {
-                  "name": ""
-                },
-                "strokeDasharray": null
-              }
-            },
-            "width": 200,
-            "height": 100,
-            "zIndex": 10,
-            "connector": "smooth",
-            "data": {
-              "type": "tm.Flow",
-              "name": "Fetch status by sending GET to /status",
-              "description": "",
-              "outOfScope": false,
-              "isTrustBoundary": false,
-              "reasonOutOfScope": "",
-              "hasOpenThreats": false,
-              "isBidirectional": false,
-              "isEncrypted": false,
-              "isPublicNetwork": false,
-              "protocol": "",
-              "threats": []
-            },
-            "labels": [
-              "Fetch status by sending GET to /status"
-            ],
-            "id": "5be4d903-6eff-4036-9157-9c2ff7f95834",
-            "source": {
-              "cell": "13a79296-d2a2-4804-bd06-dec8e9b8731b",
-              "port": "fd9491ca-a0ef-4ebf-b5b6-1b4cb4e35be1"
-            },
-            "target": {
-              "cell": "c927a2ac-cee1-4ff4-bcb4-b21c4965e406",
-              "port": "9dff80f1-863d-48c3-b3bb-183cd97f34ed"
-            },
-            "vertices": [
-              {
                 "x": 740,
-                "y": 400
+                "y": 520
               }
             ]
           },
@@ -725,7 +623,7 @@
             "connector": "smooth",
             "data": {
               "type": "tm.Flow",
-              "name": "Open/Close voting",
+              "name": "8. Initiates election opening",
               "description": "",
               "outOfScope": false,
               "isTrustBoundary": false,
@@ -738,7 +636,7 @@
               "threats": []
             },
             "labels": [
-              "Open/Close voting"
+              "8. Initiates election opening"
             ],
             "id": "ad3e4df4-f837-4e89-8c3d-d80ee0a34c56",
             "source": {
@@ -751,8 +649,8 @@
             },
             "vertices": [
               {
-                "x": 160,
-                "y": 540
+                "x": 180,
+                "y": 530
               }
             ]
           },
@@ -776,7 +674,7 @@
             "connector": "smooth",
             "data": {
               "type": "tm.Flow",
-              "name": "Query status",
+              "name": "5. Distributes each voters private key",
               "description": "",
               "outOfScope": false,
               "isTrustBoundary": false,
@@ -789,58 +687,7 @@
               "threats": []
             },
             "labels": [
-              "Query status"
-            ],
-            "id": "58163513-804b-46c9-bb4f-e7f9092b1c79",
-            "source": {
-              "x": 0,
-              "y": 520
-            },
-            "target": {
-              "cell": "13a79296-d2a2-4804-bd06-dec8e9b8731b",
-              "port": "37b96c52-6441-4f1a-acfb-0b9f2b4f2d27"
-            },
-            "vertices": [
-              {
-                "x": 130,
-                "y": 500
-              }
-            ]
-          },
-          {
-            "shape": "flow",
-            "attrs": {
-              "line": {
-                "stroke": "#333333",
-                "targetMarker": {
-                  "name": "block"
-                },
-                "sourceMarker": {
-                  "name": ""
-                },
-                "strokeDasharray": null
-              }
-            },
-            "width": 200,
-            "height": 100,
-            "zIndex": 10,
-            "connector": "smooth",
-            "data": {
-              "type": "tm.Flow",
-              "name": "Distribute public keys",
-              "description": "",
-              "outOfScope": false,
-              "isTrustBoundary": false,
-              "reasonOutOfScope": "",
-              "hasOpenThreats": false,
-              "isBidirectional": false,
-              "isEncrypted": false,
-              "isPublicNetwork": false,
-              "protocol": "",
-              "threats": []
-            },
-            "labels": [
-              "Distribute public keys"
+              "5. Distributes each voters private key"
             ],
             "id": "bb28302d-80e0-490c-94bc-6c08d54aec7c",
             "source": {
@@ -878,7 +725,7 @@
             "connector": "smooth",
             "data": {
               "type": "tm.Flow",
-              "name": "Generate RSA keypair",
+              "name": "4. Generate ECDSA keypairs for voters and admin",
               "description": "",
               "outOfScope": false,
               "isTrustBoundary": false,
@@ -891,7 +738,7 @@
               "threats": []
             },
             "labels": [
-              "Generate RSA keypair"
+              "4. Generate ECDSA keypairs for voters and admin"
             ],
             "id": "bee9b983-d434-4323-988c-bf6bfea0dc76",
             "source": {
@@ -933,7 +780,7 @@
             "connector": "smooth",
             "data": {
               "type": "tm.Flow",
-              "name": "Distribute private key",
+              "name": "3. Administrator registers voters",
               "description": "",
               "outOfScope": false,
               "isTrustBoundary": false,
@@ -946,7 +793,364 @@
               "threats": []
             },
             "labels": [
-              "Distribute private key"
+              "3. Administrator registers voters"
+            ],
+            "id": "30f8f41c-d69a-4866-b5c1-5183baef47ec",
+            "source": {
+              "cell": "198ce18a-3139-4985-b7f9-a4105b802896",
+              "port": "506c467a-2c2a-42a3-a9e0-a9aed2c845a4"
+            },
+            "target": {
+              "cell": "bc7c2b6f-ffe9-452b-ba76-5e07c8eaaa69",
+              "port": "0c91228f-2060-4f5e-bbc5-2b84a730b954"
+            },
+            "vertices": [
+              {
+                "x": 110,
+                "y": 780
+              }
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "targetMarker": {
+                  "name": "block"
+                },
+                "sourceMarker": {
+                  "name": ""
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 10,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "2. Distributes Tallier's public key with voters",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": false,
+              "isEncrypted": false,
+              "isPublicNetwork": false,
+              "protocol": "",
+              "threats": []
+            },
+            "labels": [
+              "2. Distributes Tallier's public key with voters"
+            ],
+            "id": "4f488b8e-9658-4b0c-8ecc-e1e32f25ba7a",
+            "source": {
+              "cell": "68b894a1-c00d-4c12-8e8b-785273e9b124",
+              "port": "697afe92-9159-4b41-b600-a5163963c002"
+            },
+            "target": {
+              "cell": "24a1ba15-9bc9-40c2-88f7-144c39f06fa4",
+              "port": "4e564dd6-dd0d-4d53-92f6-259e886febd6"
+            },
+            "vertices": [
+              {
+                "x": 80,
+                "y": 240
+              }
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "targetMarker": {
+                  "name": "block"
+                },
+                "sourceMarker": {
+                  "name": ""
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 10,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "18.Requests votes tally ",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": false,
+              "isEncrypted": false,
+              "isPublicNetwork": false,
+              "protocol": "",
+              "threats": []
+            },
+            "labels": [
+              "18.Requests votes tally "
+            ],
+            "id": "442af808-92d1-4f0c-8718-593192d8e842",
+            "source": {
+              "cell": "198ce18a-3139-4985-b7f9-a4105b802896",
+              "port": "8830c476-d682-43e4-8635-77707e8cb581"
+            },
+            "target": {
+              "cell": "68b894a1-c00d-4c12-8e8b-785273e9b124",
+              "port": "17dda9e0-d55e-41d8-ac14-c918eebe4ddf"
+            },
+            "vertices": [
+              {
+                "x": -280,
+                "y": 250
+              }
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "targetMarker": {
+                  "name": "block"
+                },
+                "sourceMarker": {
+                  "name": ""
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 10,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "7. Distributes Admins private key",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": false,
+              "isEncrypted": false,
+              "isPublicNetwork": false,
+              "protocol": "",
+              "threats": []
+            },
+            "labels": [
+              "7. Distributes Admins private key"
+            ],
+            "id": "2425a9d7-759e-4782-86c9-50adbccd7a44",
+            "source": {
+              "cell": "bc7c2b6f-ffe9-452b-ba76-5e07c8eaaa69",
+              "port": "0c91228f-2060-4f5e-bbc5-2b84a730b954"
+            },
+            "target": {
+              "cell": "198ce18a-3139-4985-b7f9-a4105b802896",
+              "port": "506c467a-2c2a-42a3-a9e0-a9aed2c845a4"
+            },
+            "vertices": [
+              {
+                "x": 130,
+                "y": 700
+              }
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "targetMarker": {
+                  "name": "block"
+                },
+                "sourceMarker": {
+                  "name": ""
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 10,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "10. Verifies admin's signature and\nopens election",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": false,
+              "isEncrypted": false,
+              "isPublicNetwork": false,
+              "protocol": "",
+              "threats": []
+            },
+            "labels": [
+              "10. Verifies admin's signature and\nopens election"
+            ],
+            "id": "82b017df-d9f8-4767-a82a-79e69576d2a3",
+            "source": {
+              "cell": "c927a2ac-cee1-4ff4-bcb4-b21c4965e406",
+              "port": "9dff80f1-863d-48c3-b3bb-183cd97f34ed"
+            },
+            "target": {
+              "cell": "13a79296-d2a2-4804-bd06-dec8e9b8731b",
+              "port": "fd9491ca-a0ef-4ebf-b5b6-1b4cb4e35be1"
+            },
+            "vertices": [
+              {
+                "x": 710,
+                "y": 460
+              }
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "targetMarker": {
+                  "name": "block"
+                },
+                "sourceMarker": {
+                  "name": ""
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 10,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "14. Reponds with a HTTP 200 vote successfully\nreceived message",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": false,
+              "isEncrypted": false,
+              "isPublicNetwork": false,
+              "protocol": "",
+              "threats": []
+            },
+            "labels": [
+              "14. Reponds with a HTTP 200 vote successfully\nreceived message"
+            ],
+            "id": "6477e570-77db-449a-8951-59013ce6096a",
+            "source": {
+              "cell": "c927a2ac-cee1-4ff4-bcb4-b21c4965e406",
+              "port": "731b6225-a82c-46a5-9b97-a917d8004c77"
+            },
+            "target": {
+              "cell": "867aafc0-8619-46eb-90c2-54f32412c629",
+              "port": "a85ddc7a-36c8-424f-936d-283bb70436d0"
+            },
+            "vertices": [
+              {
+                "x": 660,
+                "y": 275
+              }
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "targetMarker": {
+                  "name": "block"
+                },
+                "sourceMarker": {
+                  "name": ""
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 10,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "15. Initiates election closing",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": false,
+              "isEncrypted": false,
+              "isPublicNetwork": false,
+              "protocol": "",
+              "threats": []
+            },
+            "labels": [
+              "15. Initiates election closing"
+            ],
+            "id": "ba5a91d4-7970-4844-9c72-a61385e8de1b",
+            "source": {
+              "cell": "198ce18a-3139-4985-b7f9-a4105b802896",
+              "port": "5b27eb6b-9365-4de2-9ceb-6a257b1c709d"
+            },
+            "target": {
+              "cell": "13a79296-d2a2-4804-bd06-dec8e9b8731b",
+              "port": "37b96c52-6441-4f1a-acfb-0b9f2b4f2d27"
+            },
+            "vertices": [
+              {
+                "x": 170,
+                "y": 460
+              }
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "targetMarker": {
+                  "name": "block"
+                },
+                "sourceMarker": {
+                  "name": ""
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 10,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "6. Distributes voter's and admin's public key with server",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": false,
+              "isEncrypted": false,
+              "isPublicNetwork": false,
+              "protocol": "",
+              "threats": []
+            },
+            "labels": [
+              "6. Distributes voter's and admin's public key with server"
             ],
             "id": "cc32ec82-f853-4550-af00-7f573b51fc53",
             "source": {
@@ -984,7 +1188,7 @@
             "connector": "smooth",
             "data": {
               "type": "tm.Flow",
-              "name": "Administrator registers voters",
+              "name": "17. Closes election and saves ballots to file",
               "description": "",
               "outOfScope": false,
               "isTrustBoundary": false,
@@ -997,225 +1201,21 @@
               "threats": []
             },
             "labels": [
-              "Administrator registers voters"
+              "17. Closes election and saves ballots to file"
             ],
-            "id": "30f8f41c-d69a-4866-b5c1-5183baef47ec",
+            "id": "8704d0ca-9519-48c9-85bf-326d2880215b",
             "source": {
-              "cell": "198ce18a-3139-4985-b7f9-a4105b802896",
-              "port": "506c467a-2c2a-42a3-a9e0-a9aed2c845a4"
-            },
-            "target": {
-              "cell": "bc7c2b6f-ffe9-452b-ba76-5e07c8eaaa69",
-              "port": "0c91228f-2060-4f5e-bbc5-2b84a730b954"
-            },
-            "vertices": [
-              {
-                "x": 160,
-                "y": 700
-              }
-            ]
-          },
-          {
-            "shape": "flow",
-            "attrs": {
-              "line": {
-                "stroke": "#333333",
-                "targetMarker": {
-                  "name": "block"
-                },
-                "sourceMarker": {
-                  "name": ""
-                },
-                "strokeDasharray": null
-              }
-            },
-            "width": 200,
-            "height": 100,
-            "zIndex": 10,
-            "connector": "smooth",
-            "data": {
-              "type": "tm.Flow",
-              "name": "Requests votes tally",
-              "description": "",
-              "outOfScope": false,
-              "isTrustBoundary": false,
-              "reasonOutOfScope": "",
-              "hasOpenThreats": false,
-              "isBidirectional": false,
-              "isEncrypted": false,
-              "isPublicNetwork": false,
-              "protocol": "",
-              "threats": []
-            },
-            "labels": [
-              "Requests votes tally"
-            ],
-            "id": "442af808-92d1-4f0c-8718-593192d8e842",
-            "source": {
-              "x": -70,
-              "y": 480
-            },
-            "target": {
-              "cell": "68b894a1-c00d-4c12-8e8b-785273e9b124",
-              "port": "17dda9e0-d55e-41d8-ac14-c918eebe4ddf"
-            },
-            "vertices": [
-              {
-                "x": -160,
-                "y": 210
-              }
-            ]
-          },
-          {
-            "shape": "flow",
-            "attrs": {
-              "line": {
-                "stroke": "#333333",
-                "targetMarker": {
-                  "name": "block"
-                },
-                "sourceMarker": {
-                  "name": ""
-                },
-                "strokeDasharray": null
-              }
-            },
-            "width": 200,
-            "height": 100,
-            "zIndex": 10,
-            "connector": "smooth",
-            "data": {
-              "type": "tm.Flow",
-              "name": "Returns votes tally to tallier",
-              "description": "",
-              "outOfScope": false,
-              "isTrustBoundary": false,
-              "reasonOutOfScope": "",
-              "hasOpenThreats": false,
-              "isBidirectional": false,
-              "isEncrypted": false,
-              "isPublicNetwork": false,
-              "protocol": "",
-              "threats": []
-            },
-            "labels": [
-              "Returns votes tally to tallier"
-            ],
-            "id": "4f67916b-b939-404c-9880-6458174c56eb",
-            "source": {
-              "x": 870,
-              "y": 280
-            },
-            "target": {
-              "cell": "68b894a1-c00d-4c12-8e8b-785273e9b124",
-              "port": "a016e957-2f76-4624-914f-8d23f5b81379"
-            },
-            "vertices": [
-              {
-                "x": 510,
-                "y": 190
-              }
-            ]
-          },
-          {
-            "shape": "flow",
-            "attrs": {
-              "line": {
-                "stroke": "#333333",
-                "targetMarker": {
-                  "name": "block"
-                },
-                "sourceMarker": {
-                  "name": ""
-                },
-                "strokeDasharray": null
-              }
-            },
-            "width": 200,
-            "height": 100,
-            "zIndex": 10,
-            "connector": "smooth",
-            "data": {
-              "type": "tm.Flow",
-              "name": "Sends GET request to /votes ",
-              "description": "",
-              "outOfScope": false,
-              "isTrustBoundary": false,
-              "reasonOutOfScope": "",
-              "hasOpenThreats": false,
-              "isBidirectional": false,
-              "isEncrypted": false,
-              "isPublicNetwork": false,
-              "protocol": "",
-              "threats": []
-            },
-            "labels": [
-              "Sends GET request to /votes "
-            ],
-            "id": "bbc07085-7950-4179-975b-aa8701cd30a9",
-            "source": {
-              "cell": "68b894a1-c00d-4c12-8e8b-785273e9b124",
-              "port": "a016e957-2f76-4624-914f-8d23f5b81379"
-            },
-            "target": {
               "cell": "c927a2ac-cee1-4ff4-bcb4-b21c4965e406",
-              "port": "731b6225-a82c-46a5-9b97-a917d8004c77"
-            },
-            "vertices": [
-              {
-                "x": 580,
-                "y": 100
-              }
-            ]
-          },
-          {
-            "shape": "flow",
-            "attrs": {
-              "line": {
-                "stroke": "#333333",
-                "targetMarker": {
-                  "name": "block"
-                },
-                "sourceMarker": {
-                  "name": ""
-                },
-                "strokeDasharray": null
-              }
-            },
-            "width": 200,
-            "height": 100,
-            "zIndex": 10,
-            "connector": "smooth",
-            "data": {
-              "type": "tm.Flow",
-              "name": "Returns votes tally",
-              "description": "",
-              "outOfScope": false,
-              "isTrustBoundary": false,
-              "reasonOutOfScope": "",
-              "hasOpenThreats": false,
-              "isBidirectional": false,
-              "isEncrypted": false,
-              "isPublicNetwork": false,
-              "protocol": "",
-              "threats": []
-            },
-            "labels": [
-              "Returns votes tally"
-            ],
-            "id": "4f488b8e-9658-4b0c-8ecc-e1e32f25ba7a",
-            "source": {
-              "cell": "68b894a1-c00d-4c12-8e8b-785273e9b124",
-              "port": "697afe92-9159-4b41-b600-a5163963c002"
+              "port": "9dff80f1-863d-48c3-b3bb-183cd97f34ed"
             },
             "target": {
-              "cell": "24a1ba15-9bc9-40c2-88f7-144c39f06fa4",
-              "port": "4e564dd6-dd0d-4d53-92f6-259e886febd6"
+              "cell": "13a79296-d2a2-4804-bd06-dec8e9b8731b",
+              "port": "fd9491ca-a0ef-4ebf-b5b6-1b4cb4e35be1"
             },
             "vertices": [
               {
-                "x": 190,
-                "y": 230
+                "x": 660,
+                "y": 410
               }
             ]
           },
@@ -1239,7 +1239,7 @@
             "connector": "smooth",
             "data": {
               "type": "tm.Flow",
-              "name": "Requests votes tally",
+              "name": "21. Returns final election tally",
               "description": "",
               "outOfScope": false,
               "isTrustBoundary": false,
@@ -1252,63 +1252,12 @@
               "threats": []
             },
             "labels": [
-              "Requests votes tally"
-            ],
-            "id": "68129e3c-cbed-4b18-bb0f-094499e20169",
-            "source": {
-              "cell": "24a1ba15-9bc9-40c2-88f7-144c39f06fa4",
-              "port": "4e564dd6-dd0d-4d53-92f6-259e886febd6"
-            },
-            "target": {
-              "cell": "68b894a1-c00d-4c12-8e8b-785273e9b124",
-              "port": "697afe92-9159-4b41-b600-a5163963c002"
-            },
-            "vertices": [
-              {
-                "x": 80,
-                "y": 190
-              }
-            ]
-          },
-          {
-            "shape": "flow",
-            "attrs": {
-              "line": {
-                "stroke": "#333333",
-                "targetMarker": {
-                  "name": "block"
-                },
-                "sourceMarker": {
-                  "name": ""
-                },
-                "strokeDasharray": null
-              }
-            },
-            "width": 200,
-            "height": 100,
-            "zIndex": 10,
-            "connector": "smooth",
-            "data": {
-              "type": "tm.Flow",
-              "name": "Returns votes tally",
-              "description": "",
-              "outOfScope": false,
-              "isTrustBoundary": false,
-              "reasonOutOfScope": "",
-              "hasOpenThreats": false,
-              "isBidirectional": false,
-              "isEncrypted": false,
-              "isPublicNetwork": false,
-              "protocol": "",
-              "threats": []
-            },
-            "labels": [
-              "Returns votes tally"
+              "21. Returns final election tally"
             ],
             "id": "123eb572-ded8-4258-bb73-5e5de7f709f3",
             "source": {
-              "x": 110,
-              "y": 68
+              "cell": "68b894a1-c00d-4c12-8e8b-785273e9b124",
+              "port": "17dda9e0-d55e-41d8-ac14-c918eebe4ddf"
             },
             "target": {
               "cell": "198ce18a-3139-4985-b7f9-a4105b802896",
@@ -1316,8 +1265,165 @@
             },
             "vertices": [
               {
-                "x": -80,
-                "y": 290
+                "x": -120,
+                "y": 250
+              }
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "targetMarker": {
+                  "name": "block"
+                },
+                "sourceMarker": {
+                  "name": ""
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 10,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "20. Reconstructs private key,\ndecrypts ballots and tallies\nresults",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": false,
+              "isEncrypted": false,
+              "isPublicNetwork": false,
+              "protocol": "",
+              "threats": []
+            },
+            "labels": [
+              "20. Reconstructs private key,\ndecrypts ballots and tallies\nresults"
+            ],
+            "id": "08813e6c-5ede-43fb-99b9-5c1fceff10ca",
+            "source": {
+              "cell": "68b894a1-c00d-4c12-8e8b-785273e9b124",
+              "port": "5f2c3a3b-7e96-4d98-b837-41ddecffea36"
+            },
+            "target": {
+              "cell": "68b894a1-c00d-4c12-8e8b-785273e9b124",
+              "port": "697afe92-9159-4b41-b600-a5163963c002"
+            },
+            "vertices": [
+              {
+                "x": 190,
+                "y": 110
+              },
+              {
+                "x": 190,
+                "y": 180
+              }
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "targetMarker": {
+                  "name": "block"
+                },
+                "sourceMarker": {
+                  "name": ""
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 10,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "19. At least N trustees send\nTallier their key shares",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": false,
+              "isEncrypted": false,
+              "isPublicNetwork": false,
+              "protocol": "",
+              "threats": []
+            },
+            "labels": [
+              "19. At least N trustees send\nTallier their key shares"
+            ],
+            "id": "a50fb11b-62ee-4420-aaca-e5495f9686f0",
+            "source": {
+              "cell": "5707c8f1-c7a7-4dd0-bc67-c5bf598268a0",
+              "port": "9bcf54fa-bcd0-4992-a5d6-c289c6d5198c"
+            },
+            "target": {
+              "cell": "68b894a1-c00d-4c12-8e8b-785273e9b124",
+              "port": "5f2c3a3b-7e96-4d98-b837-41ddecffea36"
+            },
+            "vertices": [
+              {
+                "x": 150,
+                "y": 50
+              }
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "targetMarker": {
+                  "name": "block"
+                },
+                "sourceMarker": {
+                  "name": ""
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 10,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "1. Generates RSA key pair and\ndistribute shares among trustees",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": false,
+              "isEncrypted": false,
+              "isPublicNetwork": false,
+              "protocol": "",
+              "threats": []
+            },
+            "labels": [
+              "1. Generates RSA key pair and\ndistribute shares among trustees"
+            ],
+            "id": "b4ed2032-ac20-4d47-a8da-7a1a0b471b7d",
+            "source": {
+              "cell": "68b894a1-c00d-4c12-8e8b-785273e9b124",
+              "port": "17dda9e0-d55e-41d8-ac14-c918eebe4ddf"
+            },
+            "target": {
+              "cell": "5707c8f1-c7a7-4dd0-bc67-c5bf598268a0",
+              "port": "338ad2fc-2493-4322-827e-329327405ca6"
+            },
+            "vertices": [
+              {
+                "x": -140,
+                "y": 60
               }
             ]
           },
@@ -1444,7 +1550,7 @@
           },
           {
             "position": {
-              "x": 420,
+              "x": 380,
               "y": 430
             },
             "size": {
@@ -1564,8 +1670,8 @@
           },
           {
             "position": {
-              "x": -110,
-              "y": 480
+              "x": -120,
+              "y": 460
             },
             "size": {
               "width": 112.5,
@@ -1583,6 +1689,7 @@
             },
             "visible": true,
             "shape": "actor",
+            "zIndex": 13,
             "ports": {
               "groups": {
                 "top": {
@@ -1666,7 +1773,6 @@
               ]
             },
             "id": "198ce18a-3139-4985-b7f9-a4105b802896",
-            "zIndex": 13,
             "data": {
               "type": "tm.Actor",
               "name": "Administrator",
@@ -1681,8 +1787,8 @@
           },
           {
             "position": {
-              "x": 110,
-              "y": 20
+              "x": -5,
+              "y": 110
             },
             "size": {
               "width": 90,
@@ -1700,6 +1806,7 @@
             },
             "visible": true,
             "shape": "process",
+            "zIndex": 14,
             "ports": {
               "groups": {
                 "top": {
@@ -1783,7 +1890,6 @@
               ]
             },
             "id": "68b894a1-c00d-4c12-8e8b-785273e9b124",
-            "zIndex": 14,
             "data": {
               "type": "tm.Process",
               "name": "Tallier",
@@ -1796,6 +1902,123 @@
               "handlesGoodsOrServices": false,
               "isWebApplication": false,
               "privilegeLevel": "",
+              "threats": []
+            }
+          },
+          {
+            "position": {
+              "x": -70,
+              "y": -40
+            },
+            "size": {
+              "width": 112.5,
+              "height": 60
+            },
+            "attrs": {
+              "text": {
+                "text": "Trustees"
+              },
+              "body": {
+                "stroke": "#333333",
+                "strokeWidth": 1.5,
+                "strokeDasharray": null
+              }
+            },
+            "visible": true,
+            "shape": "actor",
+            "ports": {
+              "groups": {
+                "top": {
+                  "position": "top",
+                  "attrs": {
+                    "circle": {
+                      "r": 4,
+                      "magnet": true,
+                      "stroke": "#5F95FF",
+                      "strokeWidth": 1,
+                      "fill": "#fff",
+                      "style": {
+                        "visibility": "hidden"
+                      }
+                    }
+                  }
+                },
+                "right": {
+                  "position": "right",
+                  "attrs": {
+                    "circle": {
+                      "r": 4,
+                      "magnet": true,
+                      "stroke": "#5F95FF",
+                      "strokeWidth": 1,
+                      "fill": "#fff",
+                      "style": {
+                        "visibility": "hidden"
+                      }
+                    }
+                  }
+                },
+                "bottom": {
+                  "position": "bottom",
+                  "attrs": {
+                    "circle": {
+                      "r": 4,
+                      "magnet": true,
+                      "stroke": "#5F95FF",
+                      "strokeWidth": 1,
+                      "fill": "#fff",
+                      "style": {
+                        "visibility": "hidden"
+                      }
+                    }
+                  }
+                },
+                "left": {
+                  "position": "left",
+                  "attrs": {
+                    "circle": {
+                      "r": 4,
+                      "magnet": true,
+                      "stroke": "#5F95FF",
+                      "strokeWidth": 1,
+                      "fill": "#fff",
+                      "style": {
+                        "visibility": "hidden"
+                      }
+                    }
+                  }
+                }
+              },
+              "items": [
+                {
+                  "group": "top",
+                  "id": "a46beced-6d07-4966-a5eb-9b6acb3785a1"
+                },
+                {
+                  "group": "right",
+                  "id": "9bcf54fa-bcd0-4992-a5d6-c289c6d5198c"
+                },
+                {
+                  "group": "bottom",
+                  "id": "5a7e89fb-118b-4303-a128-26833fff8d76"
+                },
+                {
+                  "group": "left",
+                  "id": "338ad2fc-2493-4322-827e-329327405ca6"
+                }
+              ]
+            },
+            "id": "5707c8f1-c7a7-4dd0-bc67-c5bf598268a0",
+            "zIndex": 15,
+            "data": {
+              "type": "tm.Actor",
+              "name": "Trustees",
+              "description": "",
+              "isTrustBoundary": false,
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "providesAuthentication": false,
               "threats": []
             }
           }

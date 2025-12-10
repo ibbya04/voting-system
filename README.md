@@ -178,6 +178,12 @@ After running the test script, the following files are created:
 └── ballots.json            # Encrypted ballot box (after election closes)
 ```
 
+### Clean up script
+
+```bash
+# Cleans up any keys, config files and secret shares from previous elections
+python3 cleanup.py
+
 ## Security Features Demonstrated
 
 - **Hybrid encryption**: AES-256-GCM + RSA-OAEP protects ballot confidentiality
