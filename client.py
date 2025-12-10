@@ -179,6 +179,24 @@ def get_votes():
     except Exception as e:
         print(f"error fetching vote results {e}")
 
+def format_voter_id(raw_input):
+    """
+    Converts user input into the correctly formatted voter_id string.
+    
+    Examples:
+        '1' -> 'voter_id_1'
+        '42' -> 'voter_id_42'
+        'voter_id_5' -> 'voter_id_5' (already formatted)
+    """
+    raw_input = raw_input.strip()
+    
+    # If already in correct format, return as is
+    if raw_input.startswith('voter_id_'):
+        return raw_input
+    
+    # Otherwise, format it
+    return f'voter_id_{raw_input}'
+
 if __name__ == "__main__":
     '''
     This lets users type commands to vote or view results
@@ -188,25 +206,25 @@ if __name__ == "__main__":
     while True:
         print("\nVoting Client Menu")
         print("1. Cast a vote")
-        # print("2. Get vote results")
+        print("2. Check status")
         print("3. Exit")
-        print("4. Check status")
 
         choice = input("Enter your choice (1-4): ")
         
         if choice == '1':
-            voter_id = input("Enter the voter ID: ")
+            voter_id_input = input("Enter the voter ID: ")
+            voter_id = format_voter_id(voter_id_input)
+
             candidate = input("Enter the candidate's name (Alice, Bob, or Charlie): ")
+
             send_vote(voter_id, candidate)
-        # elif choice == '2':
-            # get_votes()
-        elif choice == '3':
-            print("\nExiting.")
-            break
-        elif choice == '4':
+        elif choice == '2':
             if check_status() is True:
                 print("\nVoting is open")
             else:
                 print("\nVoting is closed")
+        elif choice == '3':
+            print("\nExiting.")
+            break
         else:
             print("Invalid choice. Please enter 1, 2, or 3.")

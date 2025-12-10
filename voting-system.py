@@ -9,8 +9,6 @@ SERVER_SCRIPT = "server.py"
 ADMIN_SCRIPT = "admin.py"
 SERVER_URL = "http://localhost:5000"
 
-INDENT = "  "
-
 def check_server_running():
     print(f"Waiting for server to start...")
 
