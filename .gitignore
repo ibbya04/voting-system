@@ -5,8 +5,8 @@ public_keys.json
 __pycache__/
 test.py
 Secure Voting System Architecture.docx
-tallier_private.pem
-tallier_public.pem
+tallier_*.pem
+admin_*.pem
 ballots.json
 shamir_params.json
 trustee_*.share

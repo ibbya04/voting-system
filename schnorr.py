@@ -153,12 +153,12 @@ def schnorr_verify(public_key, message, signature):
         # rreconstruct point R from input
         R = Point(R_x, R_y, CURVE)
         if not CURVE.is_on_curve(R):
-            print("[Schnorr Signature] Invalid signature: R not on curve")
+            print("[Schnorr] Invalid signature: R not on curve")
             return False
         
         # Verify s is in valid range
         if s <= 0 or s >= CURVE_ORDER:
-            print("[Schnorr Signature] Invalid signature: s out of range")
+            print("[Schnorr] Invalid signature: s out of range")
             return False
         
         # Get public key point P
@@ -178,10 +178,8 @@ def schnorr_verify(public_key, message, signature):
         right_side = CURVE.add_point(R, eP)         # R + e*P
         
         if left_side.x == right_side.x and left_side.y == right_side.y:
-            print("[Schnorr] Signature verification sucessful")
             return True
         else:
-            print("[Schnorr] Signature verification failed: equation does not hold")
             return False
             
     except Exception as e:

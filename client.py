@@ -55,7 +55,7 @@ def encrypt_ballot(tallier_public_key, voter_id, candidate):
     aesgcm = AESGCM(aes_key)
     nonce = os.urandom(12) # 96-bit nonce
 
-    # encrypt ballot object
+    # encrypt ballot object with AES
     ciphertext = aesgcm.encrypt(nonce, ballot_plaintext, None)
 
     # encrypt AES session key with talliers public RSA key

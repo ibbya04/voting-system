@@ -64,8 +64,10 @@ def verify_admin_signature(self, path):
                 signature = signature_from_hex(signature_hex)
                 
                 if schnorr_verify(admin_public_key, message, signature):
+                    print("[Server] Admin signature verification sucessful")
                     return True, "Admin signature successfully verified"
                 else:
+                    print("[Server] Admin signature verification failed!")
                     return False, "Invalid admin signature"
 
         except FileNotFoundError:
@@ -169,15 +171,16 @@ class votingHTTP(BaseHTTPRequestHandler):
             if not all([voter_id, encrypted_ballot, signature_hex]):
                 raise KeyError("[Server] Missing required fields: voter_id, encrypted_ballot, or signature_hex.")
 
+            # loads public key from db file
+            # checks if the voter exists before doing an expensive cryptographic signature verification 
+            public_key = load_public_key(voter_id)
+
             # Check if voter has already voted
             with votingHTTP.lock:
                 if voter_id in votingHTTP.voted_list:
                     raise Exception(f"[Server] '{voter_id}' has already cast a ballot.")
 
-            public_key = load_public_key(voter_id)
-
             ballot_to_encode = json.dumps(encrypted_ballot, sort_keys=True)
-
 
             # verify ECDSA signature received
             try:
@@ -195,7 +198,7 @@ class votingHTTP(BaseHTTPRequestHandler):
                 votingHTTP.ballot_box.append(encrypted_ballot)
                 votingHTTP.voted_list.add(voter_id)
             
-            print(f"[Server] Successfully received and encrypted ballot for {voter_id}")
+            print(f"[Server] Successfully received ballot for {voter_id}")
             self.respond(200, "[Server] Vote successfully recorded\n")
             
         except Exception as e:

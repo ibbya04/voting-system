@@ -71,7 +71,6 @@ def generate_encryption_keys():
 
         with open(filename, "w") as f:
             json.dump(share_data, f, indent=2)
-        print(f"[Tallier] Share {i + 1} saved to {filename}")
 
     params = {
         "n_trustees": N_TRUSTEES,
@@ -87,7 +86,7 @@ def generate_encryption_keys():
         json.dump(params, f, indent=2)
 
 
-    print("[Tallier] Finised generating keys and distributing private key among {N_TRUSTEES} trustees.")
+    print(f"[Tallier] Finised generating keys and distributing private key among {N_TRUSTEES} trustees.")
 
 def load_share(trustee_id):
     # Loads a single trustees share from the file
@@ -225,7 +224,7 @@ def main_tally():
     """
     Main function which loads all ballots, decrypts using a hybrid scheme and prints the tally
     """
-    print("[Tallier] --- Starting Final Tally ---")
+    print("[Tallier] Starting Final Tally...")
 
     try:
         trustee_ids = prompt_share_ids()

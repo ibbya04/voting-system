@@ -32,8 +32,8 @@ def main():
         tallier.generate_encryption_keys()
         
         # start registrat
-        print("\nRegistrar starting (warning this overwrites any previous key files)")
-        print("Registrar registering 3 voters")
+        print("\nRegistrar starting (warning this overwrites any previous key files)...")
+        print("(Using 3 voters for this demo)")
         num_voters = 3
         registrar.main(num_voters)
 
